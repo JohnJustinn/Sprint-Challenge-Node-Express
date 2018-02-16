@@ -5,12 +5,31 @@ const fetch = require('node-fetch');
 const PORT = 3030;
 const STATUS_USER_ERROR = 422;
 const SUCCESS = 200;
+const CURRENT_PRICE_URL = 'https://api.coindesk.com/v1/bpi/currentprice/USD.json';
+const PREVIOUS_PRICE_URL = 'https://api.coindesk.com/v1/bpi/historical/close.json?for=yesterday';
 
-const server = express();
+const app = express();
 
-server.use(bodyParser.json());
+app.use(bodyParser.json());
 
-server.listen(PORT, err => {
+app.get('/current', (req, res) => {
+    const current = req.body.current;
+    const url = CURRENT_PRICE_URL;
+    console.log(CURRENT_PRICE_URL)
+    fetch(url)
+        .then(current => current.json())
+        .then(current => {
+            console.log(current);
+            res.status(SUCCESS);
+            res.json(current);
+        })
+            .catch(err => {
+                res.status(STATUS_USER_ERROR);
+                res.json({ error: err });
+            });
+});
+
+app.listen(PORT, err => {
     if (err) {
         console.log(`There was an error starting the server: ${err}`);
     } else {
