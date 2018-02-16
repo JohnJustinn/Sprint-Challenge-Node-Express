@@ -29,6 +29,23 @@ app.get('/current', (req, res) => {
             });
 });
 
+app.get('/previous', (req, res) => {
+    const previous = req.body.previous;
+    const url = PREVIOUS_PRICE_URL;
+    console.log(PREVIOUS_PRICE_URL)
+    fetch(url)
+        .then(previous => previous.json())
+        .then(previous => {
+            console.log(previous);
+            res.status(SUCCESS);
+            res.json(previous);
+        })
+        .catch(err => {
+            res.status(STATUS_USER_ERROR);
+            res.json({ error: err });
+        });
+});
+
 app.listen(PORT, err => {
     if (err) {
         console.log(`There was an error starting the server: ${err}`);
